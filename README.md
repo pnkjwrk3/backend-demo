@@ -16,7 +16,8 @@ Steps to run the project:
 4. Create two Postgres database for the project, one for DEV and one for PROD. The DEV database will be used for testing and the PROD database will be used for the API.
 5. Execute `python db_admin/setup_database.py dev` or `python db_admin/setup_database.py prod` to create schema and tables in DEV or PROD database respectively.
 6. Load data from JSON into DB using `python load_data.py dev` or `python load_data.py prod`
-7. Run the FastAPI server using `uvicorn api.main:app --reload` or `fastapi run main.py --reload`
+7. Run the tests using `pytest api/tests`
+8. Run the FastAPI server using `uvicorn api.main:app --reload` or `fastapi run main.py --reload`
 
 
 
@@ -26,7 +27,9 @@ Todo:
 - [x] Flatten the JSON data and load it into the database as a table
 - [x] Create API endpoints using FastAPI
 - [x] Setup DEV database using scripts
-- [ ] Create unit tests using Pytest or any other testing framework
+- [x] Create unit tests using Pytest or any other testing framework
 - [x] Take out polars overhead and use SQLAlchemy to load data intodatabase.
-- [ ] Cleanup the setup_database.py script
+- [x] Cleanup the setup_database.py script
+- [ ] Create tests for database connections and permissions.
+- [ ] Develop frontend to interact with the API 
 
