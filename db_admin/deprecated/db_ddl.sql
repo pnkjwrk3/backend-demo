@@ -30,3 +30,8 @@ create table if not exists playlist.songs (
 
 -- index on the title column, searching on title for API
 create index idx_title on songs (title);
+
+-- Updates to table
+ALTER TABLE playlist.songs RENAME COLUMN star_rating TO rating;
+ALTER TABLE playlist.songs ADD rating_count int DEFAULT 0 not NULL;
+

@@ -102,3 +102,5 @@ db_config.ini
 *V2.pdf
 *.json
 db_dcl_user.sql
+test_playground.ipynb
+notes.txt
