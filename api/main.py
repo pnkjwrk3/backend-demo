@@ -18,6 +18,11 @@ def get_db():
 
 
 # API Endpoints
+@app.get("/")
+def read_root():
+    return {"Hello": "World"}
+
+
 @app.get("/songs/", response_model=List[SongResponse])
 def get_songs(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return crud.get_songs(db, offset=offset, limit=limit)

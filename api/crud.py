@@ -25,8 +25,8 @@ def rate_song(db: Session, song_id: str, rating: RatingCreate):
     if not song:
         raise HTTPException(status_code=404, detail="Song not found")
 
-    song.rating = (song.rating * song.rating_count + rating.rating) / (
-        song.rating_count + 1
+    song.rating = round(
+        (song.rating * song.rating_count + rating.rating) / (song.rating_count + 1), 2
     )
     song.rating_count += 1
 
