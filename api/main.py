@@ -23,6 +23,11 @@ def get_songs(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     return crud.get_songs(db, offset=offset, limit=limit)
 
 
+@app.post("/songs/", response_model=SongResponse)
+def create_song(song: SongCreate, db: Session = Depends(get_db)):
+    return crud.create_song(db, song=song)
+
+
 @app.get("/songs/search/", response_model=List[SongResponse])
 def search_songs(title: str, db: Session = Depends(get_db)):
     return crud.search_songs(db, title=title)

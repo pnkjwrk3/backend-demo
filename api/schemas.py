@@ -42,6 +42,7 @@ class SongResponse(SongCreate):
     num_segments: int
     class_field: int
     rating: float
+    rating_count: int
 
 
 class RatingCreate(BaseModel):

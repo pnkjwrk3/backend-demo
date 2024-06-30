@@ -2,10 +2,12 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 import urllib.parse
 import configparser
+import os, sys
 
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # load config
 config = configparser.ConfigParser()
-config.read("../db_config.ini")
+config.read("db_config.ini")
 
 env_config = config[f"database_prod"]  # ideally {os.getenv('ENV', 'dev')}"]
 db_password = urllib.parse.quote_plus(env_config["api_user_password"])

@@ -1,4 +1,4 @@
-from http.client import HTTPException
+from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 from api.models import Song
 from api.schemas import SongCreate, SongResponse, RatingCreate
@@ -6,6 +6,14 @@ from api.schemas import SongCreate, SongResponse, RatingCreate
 
 def get_songs(db: Session, offset: int = 0, limit: int = 10):
     return db.query(Song).offset(offset).limit(limit).all()
+
+
+def create_song(db: Session, song: SongCreate):
+    db_song = Song(**song.model_dump())
+    db.add(db_song)
+    db.commit()
+    db.refresh(db_song)
+    return db_song
 
 
 def search_songs(db: Session, title: str):
