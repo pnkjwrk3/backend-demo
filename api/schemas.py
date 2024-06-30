@@ -1,4 +1,4 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class SongCreate(BaseModel):
@@ -40,9 +40,14 @@ class SongResponse(SongCreate):
     num_bars: int
     num_sections: int
     num_segments: int
-    class_field: int
+    class_field: int = Field(alias="class")
     rating: float
     rating_count: int
+
+    model_config = ConfigDict(from_attributes=True, populate_by_name=True)
+    # class config:
+    #     from_attributes = True
+    #     populate_by_name = True
 
 
 class RatingCreate(BaseModel):

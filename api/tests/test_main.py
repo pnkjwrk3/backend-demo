@@ -76,8 +76,21 @@ def test_create_song(client):
     # print(content["title"])
     assert content["title"] == song_data["title"]
     assert content["danceability"] == song_data["danceability"]
+    assert content["energy"] == song_data["energy"]
+    assert content["key"] == song_data["key"]
+    assert content["loudness"] == song_data["loudness"]
+    assert content["mode"] == song_data["mode"]
+    assert content["acousticness"] == song_data["acousticness"]
+    assert content["instrumentalness"] == song_data["instrumentalness"]
+    assert content["liveness"] == song_data["liveness"]
+    assert content["valence"] == song_data["valence"]
+    assert content["tempo"] == song_data["tempo"]
     assert content["duration_ms"] == song_data["duration_ms"]
-    assert content["class_field"] == song_data["class"]
+    assert content["time_signature"] == song_data["time_signature"]
+    assert content["num_bars"] == song_data["num_bars"]
+    assert content["num_sections"] == song_data["num_sections"]
+    assert content["num_segments"] == song_data["num_segments"]
+    assert content["class"] == song_data["class"]
 
 
 def test_get_songs(client):

@@ -5,7 +5,8 @@ from api.schemas import SongCreate, SongResponse, RatingCreate
 
 
 def get_songs(db: Session, offset: int = 0, limit: int = 10):
-    return db.query(Song).offset(offset).limit(limit).all()
+    songs = db.query(Song).offset(offset).limit(limit).all()
+    return [SongResponse.model_validate(song) for song in songs]
 
 
 def create_song(db: Session, song: SongCreate):
@@ -17,7 +18,8 @@ def create_song(db: Session, song: SongCreate):
 
 
 def search_songs(db: Session, title: str):
-    return db.query(Song).filter(Song.title.ilike(f"%{title}%")).all()
+    songs = db.query(Song).filter(Song.title.ilike(f"%{title}%")).all()
+    return [SongResponse.model_validate(song) for song in songs]
 
 
 def rate_song(db: Session, song_id: str, rating: RatingCreate):
@@ -32,11 +34,11 @@ def rate_song(db: Session, song_id: str, rating: RatingCreate):
 
     db.commit()
     db.refresh(song)
-    return song
+    return SongResponse.model_validate(song)
 
 
 def get_song(db: Session, song_id: str):
     song = db.query(Song).filter(Song.id == song_id).first()
     if not song:
         raise HTTPException(status_code=404, detail="Song not found")
-    return song
+    return SongResponse.model_validate(song)
