@@ -17,8 +17,9 @@ def create_song(db: Session, song: SongCreate):
     return db_song
 
 
+# Limit the number of songs to be returned to 10
 def search_songs(db: Session, title: str):
-    songs = db.query(Song).filter(Song.title.ilike(f"%{title}%")).all()
+    songs = db.query(Song).filter(Song.title.ilike(f"%{title}%")).limit(10).all()
     return [SongResponse.model_validate(song) for song in songs]
 
 

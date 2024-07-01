@@ -2,12 +2,12 @@
 
 Backend: FastAPI
 
-1. Initially used Polars to transform JSON data into a dataframe and created Database and SQL tables using DDL commands against Postgres.
-2. Once the data was loaded into the database, I used SQLAlchemy to query the database and return the results.
-3. Used FastAPI to create API endpoints to query the database.
-4. While building the API, I used Pydantic to validate the request and response data.
-5. As this was a simple model i did not create any folder structure for the project. But in a real world scenario, I would have created a folder structure to separate the database, models, and API code.
-6. While setting up the tests, I used Pytest to test the API endpoints and the database queries. However to create a DEV database, I streamlined some of the steps i took earlier to create the database and tables. Database was still manually created, but the roles and tables were setup using scripts and SQLAlchemy.
+1. Initially, I used Polars to transform JSON data into a dataframe and created a database and SQL tables using DDL commands against Postgres. Later I switched to SQLAlchemy to load the data into the database, with bulk insertions.
+2. Once the data was loaded into the database, I utilized SQLAlchemy to query the database and retrieve the results.
+3. I employed FastAPI to develop API endpoints for querying the database.
+4. During the API development, I implemented Pydantic to validate the request and response data.
+5. Although this was a simple model, in a real-world scenario, I would have organized the project into a folder structure to separate the database, models, and API code.
+6. For testing purposes, I utilized Pytest to test the API endpoints and the database queries. To streamline the process of creating a DEV database, I automated some of the steps by using scripts and SQLAlchemy to set up the roles and tables.
 
 Steps to run the project:
 1. Clone the repository
