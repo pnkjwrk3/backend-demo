@@ -21,6 +21,8 @@
   - Implemented Pytest for API endpoint and database query testing
   - Automated DB setup processes using scripts and SQLAlchemy for DEV database configuration
 
+- **Concurrency testing:**
+  - Utilized Locust for load testing the API
 
 
 ## Project Setup Instructions
@@ -74,8 +76,10 @@
     ```
 9. **Run the FastAPI Server:**
     ```sh
-    uvicorn api.main:app --reload
+    uvicorn api.main:app 
     ```
+    Workers can be added using the `--workers` flag. Ideally, gunicorn as a process manager should be used with Uvicorn workers.
+
     Alternatively, you can use the FastAPI CLI:
     ```sh   
     fastapi run main.py --reload
@@ -95,6 +99,7 @@ Todo:
 - [x] Create unit tests using Pytest or any other testing framework
 - [x] Take out polars overhead and use SQLAlchemy to load data intodatabase.
 - [x] Cleanup the setup_database.py script
+- [x] Concurrent testing using Locust
 - [ ] Create tests for database connections and permissions.
 - [ ] Develop frontend to interact with the API 
 - [x] Update pagination to page-per-page in the API
