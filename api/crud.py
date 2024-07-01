@@ -7,18 +7,6 @@ from typing import List
 import re
 
 
-# def get_songs(
-#     db: Session,
-#     offset: int = 0,
-#     limit: int = 10,
-# ) -> List[SongResponse]:
-#     """
-#     Retrive list of songs with pagination.
-#     """
-#     songs = db.query(Song).offset(offset).limit(limit).all()
-#     return [SongResponse.model_validate(song) for song in songs]
-
-
 def get_songs(
     db: Session,
     page: int = 0,

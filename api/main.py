@@ -23,15 +23,6 @@ def read_root():
     return {"Hello": "World"}
 
 
-# @app.get("/songs/", response_model=List[SongResponse])
-# def get_songs(
-#     offset: int = Query(default=0, ge=0),
-#     limit: int = Query(default=10, ge=1, le=100),
-#     db: Session = Depends(get_db),
-# ):
-#     return crud.get_songs(db, offset=offset, limit=limit)
-
-
 @app.get("/songs/", response_model=PaginatedResponse[SongResponse])
 def get_songs(
     page: int = Query(default=1, ge=1),
