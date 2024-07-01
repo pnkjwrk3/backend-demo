@@ -38,62 +38,62 @@ def create_schema(engine, schema_name):
             print(f"Ane error occurred while creating schema: {e}")
 
 
-def create_api_user(engine, config):
-    api_username = config["api_user_username"]
-    api_password = config["api_user_password"]
-    schema = config["api_user_schema"]
-    dbname = config["dbname"]
+# def create_api_user(engine, config):
+#     api_username = config["api_user_username"]
+#     api_password = config["api_user_password"]
+#     schema = config["api_user_schema"]
+#     dbname = config["dbname"]
 
-    with engine.connect() as connection:
-        try:
-            # create user
-            connection.execute(
-                text(f"create user {api_username} with password '{api_password}'")
-            )
+#     with engine.connect() as connection:
+#         try:
+#             # create user
+#             connection.execute(
+#                 text(f"create user {api_username} with password '{api_password}'")
+#             )
 
-            # grant connect privilege
-            connection.execute(
-                text(f"grant connect on database {dbname} to {api_username}")
-            )
+#             # grant connect privilege
+#             connection.execute(
+#                 text(f"grant connect on database {dbname} to {api_username}")
+#             )
 
-            # grant schema usage (replace 'public' with your schema name if different)
-            connection.execute(
-                text(f"grant usage on schema {schema} to {api_username}")
-            )
+#             # grant schema usage (replace 'public' with your schema name if different)
+#             connection.execute(
+#                 text(f"grant usage on schema {schema} to {api_username}")
+#             )
 
-            # grant table privileges
-            connection.execute(
-                text(
-                    f"grant select, insert, update, delete on all tables in schema {schema} to {api_username}"
-                )
-            )
+#             # grant table privileges
+#             connection.execute(
+#                 text(
+#                     f"grant select, insert, update, delete on all tables in schema {schema} to {api_username}"
+#                 )
+#             )
 
-            # grant sequence usage
-            connection.execute(
-                text(
-                    f"grant usage on all sequences in schema {schema} to {api_username}"
-                )
-            )
+#             # grant sequence usage
+#             connection.execute(
+#                 text(
+#                     f"grant usage on all sequences in schema {schema} to {api_username}"
+#                 )
+#             )
 
-            # set default privileges for future tables and sequences
-            connection.execute(
-                text(
-                    f"alter default privileges in schema {schema} grant select, insert, update, delete on tables to {api_username}"
-                )
-            )
-            connection.execute(
-                text(
-                    f"alter default privileges in schema {schema} grant usage on sequences to {api_username}"
-                )
-            )
+#             # set default privileges for future tables and sequences
+#             connection.execute(
+#                 text(
+#                     f"alter default privileges in schema {schema} grant select, insert, update, delete on tables to {api_username}"
+#                 )
+#             )
+#             connection.execute(
+#                 text(
+#                     f"alter default privileges in schema {schema} grant usage on sequences to {api_username}"
+#                 )
+#             )
 
-            connection.commit()
+#             connection.commit()
 
-            print(
-                f"User {api_username} created successfully with API read and write permissions."
-            )
-        except SQLAlchemyError as e:
-            print(f"An error occurred: {e}")
+#             print(
+#                 f"User {api_username} created successfully with API read and write permissions."
+#             )
+#         except SQLAlchemyError as e:
+#             print(f"An error occurred: {e}")
 
 
 def setup_database(config):
@@ -110,7 +110,7 @@ def setup_database(config):
     except SQLAlchemyError as e:
         print(f"An error occurred: {e}")
 
-    create_api_user(engine, config)
+    # create_api_user(engine, config)
 
 
 if __name__ == "__main__":

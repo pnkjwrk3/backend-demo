@@ -96,6 +96,7 @@ $RECYCLE.BIN/
 
 # db config
 db_config.ini
+db_config_docker.ini
 
 # custom files
 *.sqlite3
