@@ -1,6 +1,4 @@
 from pydantic import BaseModel, Field, ConfigDict
-
-# from pydantic.generics import GenericModel
 from typing import List, Optional, TypeVar, Generic
 
 
@@ -55,21 +53,6 @@ class SongResponse(SongCreate):
 
 class RatingCreate(BaseModel):
     rating: float
-
-
-# class PaginatedResponse(BaseModel):
-#     total_items: int
-#     total_pages: int
-#     current_page: int
-#     items_per_page: int
-#     next_page: Optional[str]
-#     prev_page: Optional[str]
-#     data: List[SongResponse]
-
-
-# class PaginatedSongResponse(BaseModel):
-#     data: List[SongResponse]
-#     pagination: PaginatedResponse
 
 
 T = TypeVar("T")
