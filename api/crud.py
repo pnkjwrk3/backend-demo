@@ -1,8 +1,8 @@
-from fastapi import HTTPException, Query, Path, Body
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from api.models import Song
 from api.schemas import SongCreate, SongResponse, RatingCreate
-from typing import List, Annotated
+from typing import List
 import re
 
 
@@ -41,7 +41,7 @@ def search_songs(db: Session, title: str) -> List[SongResponse]:
 def rate_song(
     db: Session,
     song_id: str,
-    rating: str,
+    rating: RatingCreate,
 ) -> SongResponse:
     """
     Rate a song with a rating value between 0 and 5.

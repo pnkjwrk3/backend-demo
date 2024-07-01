@@ -1,23 +1,86 @@
 ## Json Playlist analysis
 
-Backend: FastAPI
+#### Backend: FastAPI, SQLAlchemy, Postgres, Pydantic, Pytest
 
-1. Initially, I used Polars to transform JSON data into a dataframe and created a database and SQL tables using DDL commands against Postgres. Later I switched to SQLAlchemy to load the data into the database, with bulk insertions.
-2. Once the data was loaded into the database, I utilized SQLAlchemy to query the database and retrieve the results.
-3. I employed FastAPI to develop API endpoints for querying the database.
-4. During the API development, I implemented Pydantic to validate the request and response data.
-5. Although this was a simple model, in a real-world scenario, I would have organized the project into a folder structure to separate the database, models, and API code.
-6. For testing purposes, I utilized Pytest to test the API endpoints and the database queries. To streamline the process of creating a DEV database, I automated some of the steps by using scripts and SQLAlchemy to set up the roles and tables.
+- **Data Processing:**
+  - Utilized Polars for JSON to dataframe transformation
+  - Initially used DDL commands for database and table creation in Postgres
+  - Switched to SQLAlchemy for efficient bulk data insertion
 
-Steps to run the project:
-1. Clone the repository
-2. Create a virtual environment and activate it
-3. Install the requirements using `pip install -r requirements.txt`
-4. Create two Postgres database for the project, one for DEV and one for PROD. The DEV database will be used for testing and the PROD database will be used for the API.
-5. Execute `python db_admin/setup_database.py dev` or `python db_admin/setup_database.py prod` to create schema and tables in DEV or PROD database respectively.
-6. Load data from JSON into DB using `python load_data.py dev` or `python load_data.py prod`
-7. Run the tests using `pytest api/tests`
-8. Run the FastAPI server using `uvicorn api.main:app --reload` or `fastapi run main.py --reload`
+- **Database Interaction:**
+  - Employed SQLAlchemy for database querying and result retrieval
+
+- **API Development:**
+  - Implemented FastAPI for creating API endpoints
+  - Utilized Pydantic for request and response validation
+
+- **Project Structure:**
+  - Acknowledged the need for separating database, models, and API code in a production environment
+
+- **Testing:**
+  - Implemented Pytest for API endpoint and database query testing
+  - Automated DB setup processes using scripts and SQLAlchemy for DEV database configuration
+
+
+
+## Project Setup Instructions
+
+1. **Clone the Repository:**
+   ```sh
+   git clone <repository_url>
+    ```
+2. **Create and Activate a Virtual Environment:** 
+   ```sh
+   python3 -m venv env
+   source env/bin/activate
+   ```
+
+3. **Install the Required Packages:**
+   ```sh
+    pip install -r requirements.txt
+    ```
+4. **Set Up PostgreSQL Databases:**
+- Create two PostgreSQL databases, one for development (DEV) and one for production (PROD). 
+- The DEV database is for testing, and the PROD database is for the actual API.
+
+5. **Configure the Database:**
+- Copy the example configuration file and update the values:
+   ```sh
+   cp db_config_example.ini db_config.ini
+   ```
+- Edit `db_config.ini` to include your database credentials, API User credentials and configurations. API User is created using the setup_database.py script.
+
+6. **Create the Database Schema and Tables:**
+- For the DEV database:
+   ```sh
+   python db_admin/setup_database.py dev
+   ```
+- For the PROD database:
+   ```sh
+    python db_admin/setup_database.py prod
+    ```
+7. **Load Data from JSON into the Database:**
+- For the DEV database:
+   ```sh
+   python load_data.py dev
+   ```
+- For the PROD database:
+   ```sh
+    python load_data.py prod
+    ```
+8. **Run the Tests:**
+    ```sh
+    pytest api/tests
+    ```
+9. **Run the FastAPI Server:**
+    ```sh
+    uvicorn api.main:app --reload
+    ```
+    Alternatively, you can use the FastAPI CLI:
+    ```sh   
+    fastapi run main.py --reload
+    ```
+
 
 
 
@@ -32,4 +95,5 @@ Todo:
 - [x] Cleanup the setup_database.py script
 - [ ] Create tests for database connections and permissions.
 - [ ] Develop frontend to interact with the API 
+- [ ] Update pagination in the API
 

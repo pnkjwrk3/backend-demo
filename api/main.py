@@ -1,8 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, Query, Path, Body
 from sqlalchemy.orm import Session
 from typing import List
-from api.database import SessionLocal, engine
-from api.models import Base, Song
+from api.database import SessionLocal
 from api.schemas import SongCreate, SongResponse, RatingCreate
 import api.crud as crud
 from typing import Annotated
