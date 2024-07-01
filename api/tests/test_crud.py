@@ -1,58 +1,19 @@
 import pytest
 import uuid
 
-# from sqlalchemy import create_engine
-# from sqlalchemy.orm import sessionmaker
-from api.models import Base, Song
+# from api.models import Base, Song
 from api.crud import get_songs, search_songs, rate_song, get_song, create_song
-from api.schemas import RatingCreate
+from api.schemas import RatingCreate, PaginatedResponse, SongResponse
 from api.tests.utils_song_gen import create_random_song
 from fastapi import status
 from fastapi.exceptions import HTTPException
-
-# from database import engine, SessionLocal
-
-
-# @pytest.fixture(scope="module")
-# def db_session():
-#     Base.metadata.create_all(bind=engine)
-#     session = SessionLocal()
-#     yield session
-#     session.close()
-#     Base.metadata.drop_all(bind=engine)
-
-
-@pytest.fixture(scope="function")
-def sample_song(db_session):
-    song = Song(
-        id="1",
-        title="Test Song",
-        danceability=0.8,
-        energy=0.7,
-        key=5,
-        loudness=-5.0,
-        mode=1,
-        acousticness=0.1,
-        instrumentalness=0.0,
-        liveness=0.3,
-        valence=0.6,
-        tempo=120.0,
-        duration_ms=200000,
-        time_signature=4,
-        num_bars=100,
-        num_sections=5,
-        num_segments=10,
-        class_field=1,
-    )
-    db_session.add(song)
-    db_session.commit()
-    return song
 
 
 def test_create_song(db_session):
     song_data = create_random_song()
 
     song = create_song(db_session, song=song_data)
+    assert isinstance(song, SongResponse)
     assert song.title == song_data.title
     assert song.danceability == song_data.danceability
     assert song.energy == song_data.energy
@@ -73,10 +34,17 @@ def test_create_song(db_session):
 
 
 def test_get_songs(db_session):
-    song_data = create_random_song()
-    create_song(db_session, song=song_data)
-    songs = get_songs(db_session, offset=0, limit=10)
-    assert len(songs) >= 2
+    song_data1 = create_random_song()
+    song_data2 = create_random_song()
+    create_song(db_session, song=song_data1)
+    create_song(db_session, song=song_data2)
+
+    response = get_songs(db_session, page=1, limit=10)
+    assert isinstance(response, PaginatedResponse)
+    assert response.total_items >= 2
+    assert response.current_page == 1
+    assert len(response.data) >= 2
+    assert all(isinstance(song, SongResponse) for song in response.data)
 
 
 def test_search_songs(db_session):
@@ -85,6 +53,7 @@ def test_search_songs(db_session):
     songs = search_songs(db_session, title=song_data.title)
     assert len(songs) == 1
     assert songs[0].title == song_data.title
+    assert all(isinstance(song, SongResponse) for song in songs)
 
 
 def test_rate_song(db_session):
@@ -92,6 +61,7 @@ def test_rate_song(db_session):
     create_song(db_session, song=song_data)
     rating = RatingCreate(rating=5.0)
     song = rate_song(db_session, song_id=song_data.id, rating=rating)
+    assert isinstance(song, SongResponse)
     assert song.rating == 5.0
     assert song.rating_count == 1
 
@@ -100,6 +70,7 @@ def test_get_song(db_session):
     song_data = create_random_song()
     create_song(db_session, song=song_data)
     song = get_song(db_session, song_id=song_data.id)
+    assert isinstance(song, SongResponse)
     assert song.title == song.title
 
 
