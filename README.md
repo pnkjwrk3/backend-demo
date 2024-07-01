@@ -87,6 +87,14 @@
 10. **Access the API:**
 - Open your browser and navigate to `http://127.0.0.1:8000/docs` to access the API.
 
+11. **Load Testing with Locust:**
+- Start the Locust server:
+    ```sh
+    locust -f locustfile.py --host=http://127.0.0.1:8000
+    ```
+- Open your browser and navigate to `http://127.0.0.1:8089` to access the Locust dashboard.
+- Enter the number of users to simulate and the ramp up rate, then click `Start`.
+- Monitor the API performance and response times.
 
 
 
