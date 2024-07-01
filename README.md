@@ -80,6 +80,8 @@
     ```sh   
     fastapi run main.py --reload
     ```
+10. **Access the API:**
+- Open your browser and navigate to `http://127.0.0.1:8000/docs` to access the API.
 
 
 
@@ -95,5 +97,5 @@ Todo:
 - [x] Cleanup the setup_database.py script
 - [ ] Create tests for database connections and permissions.
 - [ ] Develop frontend to interact with the API 
-- [ ] Update pagination in the API
+- [x] Update pagination to page-per-page in the API
 

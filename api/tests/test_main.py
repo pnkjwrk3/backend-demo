@@ -93,16 +93,60 @@ def test_create_song(client):
     assert content["class"] == song_data["class"]
 
 
+# def test_get_songs(client):
+#     song_data1 = create_random_song_dict()
+#     song_data2 = create_random_song_dict()
+#     client.post("/songs/", json=song_data1)
+#     client.post("/songs/", json=song_data2)
+#     response = client.get("/songs/")
+#     assert response.status_code == 200
+#     songs = response.json()
+#     assert len(songs) >= 2
+#     # assert songs[0]["title"] == "Test Song"
+
+
+# def test_get_songs_pagination(client):
+#     for _ in range(15):
+#         song_data = create_random_song_dict()
+#         client.post("/songs/", json=song_data)
+
+#     response = client.get("/songs/?offset=0&limit=10")
+#     result = response.json()
+#     assert len(result) == 10
+
+#     response = client.get("/songs/?offset=10&limit=10")
+#     result = response.json()
+#     assert len(result) >= 5
+
+
+# def test_get_songs_invalid_pagination(client):
+#     response = client.get("/songs/?offset=0&limit=10")
+#     assert response.status_code == 200
+
+#     response = client.get("/songs/?offset=10&limit=10")
+#     assert response.status_code == 200
+
+#     response = client.get("/songs/?offset=-1&limit=1000")
+#     assert response.status_code == 422
+
+
 def test_get_songs(client):
     song_data1 = create_random_song_dict()
     song_data2 = create_random_song_dict()
     client.post("/songs/", json=song_data1)
     client.post("/songs/", json=song_data2)
+
     response = client.get("/songs/")
     assert response.status_code == 200
-    songs = response.json()
-    assert len(songs) >= 2
-    # assert songs[0]["title"] == "Test Song"
+
+    result = response.json()
+    assert "data" in result
+    assert isinstance(result["total_items"], int)
+    assert isinstance(result["current_page"], int)
+    assert isinstance(result["total_pages"], int)
+    assert isinstance(result["items_per_page"], int)
+    assert isinstance(result["data"], list)
+    assert len(result["data"]) >= 2
 
 
 def test_get_songs_pagination(client):
@@ -110,23 +154,27 @@ def test_get_songs_pagination(client):
         song_data = create_random_song_dict()
         client.post("/songs/", json=song_data)
 
-    response = client.get("/songs/?offset=0&limit=10")
+    response = client.get("/songs/?page=1&limit=10")
     result = response.json()
-    assert len(result) == 10
+    assert "data" in result
+    assert result["current_page"] == 1
+    assert len(result["data"]) == 10
 
-    response = client.get("/songs/?offset=10&limit=10")
+    response = client.get("/songs/?page=2&limit=10")
     result = response.json()
-    assert len(result) >= 5
+    assert "data" in result
+    assert result["current_page"] == 2
+    assert len(result["data"]) >= 5
 
 
 def test_get_songs_invalid_pagination(client):
-    response = client.get("/songs/?offset=0&limit=10")
+    response = client.get("/songs/?page=1&limit=10")
     assert response.status_code == 200
 
-    response = client.get("/songs/?offset=10&limit=10")
+    response = client.get("/songs/?page=2&limit=10")
     assert response.status_code == 200
 
-    response = client.get("/songs/?offset=-1&limit=1000")
+    response = client.get("/songs/?page=-1&limit=1000")
     assert response.status_code == 422
 
 

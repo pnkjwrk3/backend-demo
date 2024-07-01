@@ -1,21 +1,46 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import func
 from api.models import Song
-from api.schemas import SongCreate, SongResponse, RatingCreate
+from api.schemas import SongCreate, SongResponse, RatingCreate, PaginatedResponse
 from typing import List
 import re
 
 
+# def get_songs(
+#     db: Session,
+#     offset: int = 0,
+#     limit: int = 10,
+# ) -> List[SongResponse]:
+#     """
+#     Retrive list of songs with pagination.
+#     """
+#     songs = db.query(Song).offset(offset).limit(limit).all()
+#     return [SongResponse.model_validate(song) for song in songs]
+
+
 def get_songs(
     db: Session,
-    offset: int = 0,
-    limit: int = 10,
-) -> List[SongResponse]:
-    """
-    Retrive list of songs with pagination.
-    """
+    page: int = 0,
+    limit: int = 20,
+) -> PaginatedResponse[SongResponse]:
+    total_items = db.query(func.count(Song.id)).scalar()
+    total_pages = (total_items + limit - 1) // limit
+    offset = (page - 1) * limit
     songs = db.query(Song).offset(offset).limit(limit).all()
-    return [SongResponse.model_validate(song) for song in songs]
+
+    next_page = f"/songs/?page={page + 1}&limit={limit}" if page < total_pages else None
+    prev_page = f"/songs/?page={page - 1}&limit={limit}" if page > 1 else None
+
+    return PaginatedResponse[SongResponse](
+        total_items=total_items,
+        total_pages=total_pages,
+        current_page=page,
+        items_per_page=limit,
+        next_page=next_page,
+        prev_page=prev_page,
+        data=[SongResponse.model_validate(song) for song in songs],
+    )
 
 
 def create_song(db: Session, song: SongCreate) -> SongResponse:

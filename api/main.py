@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException, Depends, Query, Path, Body
 from sqlalchemy.orm import Session
 from typing import List
 from api.database import SessionLocal
-from api.schemas import SongCreate, SongResponse, RatingCreate
+from api.schemas import SongCreate, SongResponse, RatingCreate, PaginatedResponse
 import api.crud as crud
 from typing import Annotated
 
@@ -23,13 +23,22 @@ def read_root():
     return {"Hello": "World"}
 
 
-@app.get("/songs/", response_model=List[SongResponse])
+# @app.get("/songs/", response_model=List[SongResponse])
+# def get_songs(
+#     offset: int = Query(default=0, ge=0),
+#     limit: int = Query(default=10, ge=1, le=100),
+#     db: Session = Depends(get_db),
+# ):
+#     return crud.get_songs(db, offset=offset, limit=limit)
+
+
+@app.get("/songs/", response_model=PaginatedResponse[SongResponse])
 def get_songs(
-    offset: int = Query(default=0, ge=0),
-    limit: int = Query(default=10, ge=1, le=100),
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=20, ge=1, le=100),
     db: Session = Depends(get_db),
 ):
-    return crud.get_songs(db, offset=offset, limit=limit)
+    return crud.get_songs(db, page=page, limit=limit)
 
 
 @app.post("/songs/", response_model=SongResponse)
