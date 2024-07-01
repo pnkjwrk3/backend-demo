@@ -110,5 +110,6 @@ Todo:
 - [x] Concurrent testing using Locust
 - [ ] Create tests for database connections and permissions.
 - [ ] Develop frontend to interact with the API 
+- [ ] React components for the frontend
 - [x] Update pagination to page-per-page in the API
 
