@@ -22,31 +22,31 @@ from fastapi.exceptions import HTTPException
 #     Base.metadata.drop_all(bind=engine)
 
 
-@pytest.fixture(scope="function")
-def sample_song(db_session):
-    song = Song(
-        id="1",
-        title="Test Song",
-        danceability=0.8,
-        energy=0.7,
-        key=5,
-        loudness=-5.0,
-        mode=1,
-        acousticness=0.1,
-        instrumentalness=0.0,
-        liveness=0.3,
-        valence=0.6,
-        tempo=120.0,
-        duration_ms=200000,
-        time_signature=4,
-        num_bars=100,
-        num_sections=5,
-        num_segments=10,
-        class_field=1,
-    )
-    db_session.add(song)
-    db_session.commit()
-    return song
+# @pytest.fixture(scope="function")
+# def sample_song(db_session):
+#     song = Song(
+#         id="1",
+#         title="Test Song",
+#         danceability=0.8,
+#         energy=0.7,
+#         key=5,
+#         loudness=-5.0,
+#         mode=1,
+#         acousticness=0.1,
+#         instrumentalness=0.0,
+#         liveness=0.3,
+#         valence=0.6,
+#         tempo=120.0,
+#         duration_ms=200000,
+#         time_signature=4,
+#         num_bars=100,
+#         num_sections=5,
+#         num_segments=10,
+#         class_field=1,
+#     )
+#     db_session.add(song)
+#     db_session.commit()
+#     return song
 
 
 def test_create_song(db_session):

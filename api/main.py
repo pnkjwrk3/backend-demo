@@ -1,10 +1,11 @@
-from fastapi import FastAPI, HTTPException, Depends
+from fastapi import FastAPI, HTTPException, Depends, Query, Path, Body
 from sqlalchemy.orm import Session
 from typing import List
 from api.database import SessionLocal, engine
 from api.models import Base, Song
 from api.schemas import SongCreate, SongResponse, RatingCreate
 import api.crud as crud
+from typing import Annotated
 
 app = FastAPI()
 
@@ -24,7 +25,11 @@ def read_root():
 
 
 @app.get("/songs/", response_model=List[SongResponse])
-def get_songs(offset: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def get_songs(
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
+    db: Session = Depends(get_db),
+):
     return crud.get_songs(db, offset=offset, limit=limit)
 
 
@@ -34,15 +39,29 @@ def create_song(song: SongCreate, db: Session = Depends(get_db)):
 
 
 @app.get("/songs/search/", response_model=List[SongResponse])
-def search_songs(title: str, db: Session = Depends(get_db)):
+def search_songs(
+    title: Annotated[str, Query(..., min_length=1, max_length=100)],
+    db: Session = Depends(get_db),
+):
     return crud.search_songs(db, title=title)
 
 
 @app.post("/songs/{song_id}/rate/", response_model=SongResponse)
-def rate_song(song_id: str, rating: RatingCreate, db: Session = Depends(get_db)):
+def rate_song(
+    song_id: Annotated[str, Path(..., min_length=1, max_length=50)],
+    rating: RatingCreate,
+    db: Session = Depends(get_db),
+):
+    if not 0 <= rating.rating <= 5:
+        raise HTTPException(
+            status_code=400, detail="Invalid rating. Must be between 0 and 5."
+        )
     return crud.rate_song(db, song_id=song_id, rating=rating)
 
 
 @app.get("/songs/{song_id}/", response_model=SongResponse)
-def get_song(song_id: str, db: Session = Depends(get_db)):
+def get_song(
+    song_id: Annotated[str, Path(..., min_length=1, max_length=50)],
+    db: Session = Depends(get_db),
+):
     return crud.get_song(db, song_id=song_id)
