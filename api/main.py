@@ -3,9 +3,18 @@ from sqlalchemy.orm import Session
 from typing import List
 from api.database import SessionLocal
 from api.schemas import SongCreate, SongResponse, RatingCreate, PaginatedResponse
+from contextlib import asynccontextmanager
 import api.crud as crud
 from typing import Annotated
 
+
+# @asynccontextmanager
+# async def lifespan(app: FastAPI):
+#     init_db()
+#     yield
+
+
+# app = FastAPI(lifespan=lifespan)
 app = FastAPI()
 
 

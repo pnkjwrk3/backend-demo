@@ -4,10 +4,22 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+import os
 
-from api.models import Base
+from alembic import operations
 
-target_metadata = Base.metadata
+
+def process_revision_directives(context, revision, directives):
+    """Modify the MigrationScript directives to create schemata as required."""
+    script = directives[0]
+    for schema in frozenset(i.schema for i in target_metadata.tables.values()):
+        script.upgrade_ops.ops.insert(
+            0, operations.ops.ExecuteSQLOp(f"CREATE SCHEMA IF NOT EXISTS {schema}")
+        )
+        script.downgrade_ops.ops.append(
+            operations.ops.ExecuteSQLOp(f"DROP SCHEMA IF EXISTS {schema} RESTRICT")
+        )
+
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -22,12 +34,18 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+from api.models import Base
+
+target_metadata = Base.metadata
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+
+
+def get_url():
+    return os.getenv("DATABASE_URL")
 
 
 def run_migrations_offline() -> None:
@@ -43,11 +61,14 @@ def run_migrations_offline() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
+    # url = get_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
+        include_schemas=True,
+        process_revision_directives=process_revision_directives,
     )
 
     with context.begin_transaction():
@@ -68,7 +89,11 @@ def run_migrations_online() -> None:
     )
 
     with connectable.connect() as connection:
-        context.configure(connection=connection, target_metadata=target_metadata)
+        context.configure(
+            connection=connection,
+            target_metadata=target_metadata,
+            process_revision_directives=process_revision_directives,
+        )
 
         with context.begin_transaction():
             context.run_migrations()
