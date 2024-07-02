@@ -1,8 +1,14 @@
-from fastapi import FastAPI, HTTPException, Depends, Query, Path, Body
+from fastapi import FastAPI, File, HTTPException, Depends, Query, Path, Body, UploadFile
 from sqlalchemy.orm import Session
 from typing import List
 from api.database import SessionLocal
-from api.schemas import SongCreate, SongResponse, RatingCreate, PaginatedResponse
+from api.schemas import (
+    SongCreate,
+    SongResponse,
+    RatingCreate,
+    PaginatedResponse,
+    InsertionResult,
+)
 from contextlib import asynccontextmanager
 import api.crud as crud
 from typing import Annotated
@@ -73,3 +79,8 @@ def get_song(
     db: Session = Depends(get_db),
 ):
     return crud.get_song(db, song_id=song_id)
+
+
+@app.post("/upload", response_model=InsertionResult)
+def upload_songs(file: UploadFile = File(...), db: Session = Depends(get_db)):
+    return crud.upload_playlist_file(db, file.file)
