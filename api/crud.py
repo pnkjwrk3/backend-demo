@@ -2,9 +2,17 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 from api.models import Song
-from api.schemas import SongCreate, SongResponse, RatingCreate, PaginatedResponse
+from api.schemas import (
+    SongCreate,
+    SongResponse,
+    RatingCreate,
+    PaginatedResponse,
+    InsertionResult,
+)
 from typing import List
-import re
+from api.utils import normalize_json_to_dicts
+from sqlalchemy.exc import IntegrityError
+from pydantic import ValidationError
 
 
 def get_songs(
@@ -81,3 +89,32 @@ def get_song(db: Session, song_id: str) -> SongResponse:
     if not song:
         raise HTTPException(status_code=404, detail="Song not found")
     return SongResponse.model_validate(song)
+
+
+def upload_playlist_file(db: Session, input_file) -> dict:
+    records = normalize_json_to_dicts(input_file)
+    return insert_records(db, records)
+
+
+def insert_records(db: Session, records: List[dict]) -> dict:
+    duplicates = []
+    inserted = 0
+
+    for record in records:
+        try:
+            # Validate the record
+            song = SongCreate(**record)
+
+            # Insert the record into the database
+            create_song(db, song=song)
+            inserted += 1
+        except IntegrityError:
+            # Handle duplicate keys
+            duplicates.append(record["id"])
+            db.rollback()
+        except ValidationError as e:
+            # Handle validation errors
+            print(f"Validation error: {e}")
+            continue
+
+    return InsertionResult(inserted=inserted, errors=duplicates)

@@ -66,3 +66,8 @@ class PaginatedResponse(BaseModel, Generic[T]):
     next_page: Optional[str]
     prev_page: Optional[str]
     data: List[T]
+
+
+class InsertionResult(BaseModel):
+    inserted: int
+    errors: List[str]
