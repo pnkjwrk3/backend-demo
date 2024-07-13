@@ -33,9 +33,12 @@ def create_db_url(config, is_admin=False):
     return f"postgresql://{user}:{password}@{config['host']}:{config['port']}/{config['dbname']}"
 
 
-config = load_db_config()
-ADMIN_DB_URL = create_db_url(config, is_admin=True)
-TEST_DB_URL = create_db_url(config)
+# config = load_db_config()
+# ADMIN_DB_URL = create_db_url(config, is_admin=True)
+# TEST_DB_URL = create_db_url(config)
+
+ADMIN_DB_URL = os.getenv("DATABASE_URL")
+TEST_DB_URL = os.getenv("DATABASE_URL")
 
 # engine = create_engine(DEV_DB_URL)
 # TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

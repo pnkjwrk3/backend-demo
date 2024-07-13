@@ -1,25 +1,32 @@
-## Json Playlist analysis
+## Json Songs and Playlist analysis
 
 #### Backend: FastAPI, SQLAlchemy, Postgres, Pydantic, Pytest
+This is a project that involves the analysis of JSON data containing songs. An API is created to load json files and interact with the data. The API provides endpoints to retrieve songs, rate songs and search for songs. The main aim of this project is to demonstrate the use of FastAPI, SQLAlchemy, Pydantic, and Pytest for bulding scalable backends. 
+
+- **Database:**
+  - The project uses Postgres as the database for storing the JSON data.
+  - alemic is used for database migrations and schema management.
+  - SQLAlchemy is used for database interaction and querying.
 
 - **Data Processing:**
-  - Utilized Polars for JSON to dataframe transformation
-  - Initially used DDL commands for database and table creation in Postgres
-  - Switched to SQLAlchemy for efficient bulk data insertion
-
-- **Database Interaction:**
-  - Employed SQLAlchemy for database querying and result retrieval
+  - The API provides an endpoint to load JSON data into the database.
+  - The JSON data is flattened, validated and loaded into a Postgres database using SQLAlchemy.
 
 - **API Development:**
   - Implemented FastAPI for creating API endpoints
   - Utilized Pydantic for request and response validation
 
 - **Project Structure:**
-  - Acknowledged the need for separating database, models, and API code in a production environment
+  - The project is structured into modules for easy maintenance and scalability.
+
+- **API Endpoints:**
+  - The API provides endpoints to retrieve songs, rate songs, search for songs, and load JSON data into the database.
+  - Pagination is implemented to return a fixed number of results per page.
 
 - **Testing:**
   - Implemented Pytest for API endpoint and database query testing
-  - Automated DB setup processes using scripts and SQLAlchemy for DEV database configuration
+  - Utilized Pytest fixtures for setting up and tearing down test environments
+  - Testing is not yet autoamted, and uses the same database as the production database.
 
 - **Concurrency testing:**
   - Utilized Locust for load testing the API
@@ -31,72 +38,24 @@
    ```sh
    git clone <repository_url>
     ```
-2. **Create and Activate a Virtual Environment:** 
-   ```sh
-   python3 -m venv env
-   source env/bin/activate
-   ```
 
-3. **Install the Required Packages:**
-   ```sh
-    pip install -r requirements.txt
-    ```
-4. **Set Up PostgreSQL Databases:**
-- Create two PostgreSQL databases, one for development (DEV) and one for production (PROD). 
-- The DEV database is for testing, and the PROD database is for the actual API.
-
-5. **Configure the Database:**
-- Copy the example configuration file and update the values:
-   ```sh
-   cp db_config_example.ini db_config.ini
-   ```
-- Edit `db_config.ini` to include your database credentials, API User credentials and configurations. API User is created using the setup_database.py script.
-
-6. **Create the Database Schema and Tables:**
-- For the DEV database:
-   ```sh
-   python db_admin/setup_database.py dev
-   ```
-- For the PROD database:
-   ```sh
-    python db_admin/setup_database.py prod
-    ```
-7. **Load Data from JSON into the Database:**
-- For the DEV database:
-   ```sh
-   python load_data.py dev
-   ```
-- For the PROD database:
-   ```sh
-    python load_data.py prod
-    ```
-8. **Run the Tests:**
+2. **Navigate to the project directory:**
     ```sh
-    pytest api/tests
+    cd backend-fastapi
     ```
-9. **Run the FastAPI Server:**
+3. Run the following command to start the docker containers:
     ```sh
-    uvicorn api.main:app 
+    docker compose up --build
     ```
-    Workers can be added using the `--workers` flag. Ideally, gunicorn as a process manager should be used with Uvicorn workers.
 
-    Alternatively, you can use the FastAPI CLI:
-    ```sh   
-    fastapi run main.py --reload
-    ```
-10. **Access the API:**
-- Open your browser and navigate to `http://127.0.0.1:8000/docs` to access the API.
+4. **Access the API:**
+- Open your browser and navigate to `http://0.0.0.0:8000/docs` to access the API.
+- The API documentation provides information on the available endpoints and how to interact with them.
 
-11. **Load Testing with Locust:**
-- Start the Locust server:
+4. To stop the docker containers, run the following command:
     ```sh
-    locust -f locustfile.py --host=http://127.0.0.1:8000
+    docker compose down
     ```
-- Open your browser and navigate to `http://127.0.0.1:8089` to access the Locust dashboard.
-- Enter the number of users to simulate and the ramp up rate, then click `Start`.
-- Monitor the API performance and response times.
-
-
 
 
 Todo:
@@ -109,6 +68,5 @@ Todo:
 - [x] Cleanup the setup_database.py script
 - [x] Concurrent testing using Locust
 - [ ] Create tests for database connections and permissions.
-- [ ] Develop frontend to interact with the API 
 - [x] Update pagination to page-per-page in the API
 
